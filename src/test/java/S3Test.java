@@ -17,10 +17,10 @@ public class S3Test {
 
     @Test
     public void test() {
-        String s3bucket = "s3-service-broker-dev-e5772d92-0d95-485d-aa17-151e230a851a";
+        String s3bucket = System.getenv("RDDOC_AWS_S3_BUCKET");
         String s3prefix = "normalized-protocol-full/";
 
-        BasicAWSCredentials awsCreds = new BasicAWSCredentials("AKIAIF2NZIU4SZBBSPHQ", "Ogj1rG/3Ww5kGtUPg9xvtdovtlWDz65HVVlIMKmb");
+        BasicAWSCredentials awsCreds = new BasicAWSCredentials(System.getenv("RDDOC_AWS_ACCESS_KEY"), System.getenv("RDDOC_AWS_SECRET_KEY"));
         AmazonS3 s3client = AmazonS3ClientBuilder.standard()
                 .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
                 .build();

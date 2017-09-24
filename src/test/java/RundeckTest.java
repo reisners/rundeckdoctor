@@ -24,14 +24,15 @@ public class RundeckTest {
                 .logger(new Slf4jLogger(RundeckClient.class))
                 .logLevel(Logger.Level.FULL)
                 .target(RundeckClient.class, "http://sm-test-app-01.springer-sbm.com:4440");
-        List<RundeckJob> list = rundeckClient.listJobByProject("protocols");
+        String rundeckApiToken = System.getenv("RDDOC_RUNDECK_API_TOKEN");
+        List<RundeckJob> list = rundeckClient.listJobByProject(rundeckApiToken,"protocols");
         System.out.println(list);
 
         Map<String, RundeckJob> jobs = list.stream().collect(Collectors.toMap(job -> job.name, job -> job));
 
         RundeckJob inputJob = jobs.get("01 - Get Input Data - on itpcmd-test");
 
-        RundeckExecutionRoot inputExecutions = rundeckClient.listJobExecutions(inputJob.id);
+        RundeckExecutionRoot inputExecutions = rundeckClient.listJobExecutions(rundeckApiToken, inputJob.id);
         System.out.println(inputExecutions);
 
         inputExecutions.executions.forEach(ex -> {

@@ -32,9 +32,11 @@ public class RundeckDoctor {
     }
 
     private final SheetService sheetService;
+    private final String rundeckApiToken;
 
     public RundeckDoctor(String[] args) {
-        String spreadsheetId = "1K3kynNKShOGYzBFflKU5B4Sjtfjb9YeT5YVqOdw_qfU";
+        String spreadsheetId = System.getenv("RDDOC_GOOGLE_SHEET_ID");
+        rundeckApiToken = System.getenv("RDDOC_RUNDECK_API_TOKEN");
         sheetService = new SheetService(spreadsheetId);
 
     }
@@ -64,7 +66,7 @@ public class RundeckDoctor {
                 .logger(new Slf4jLogger(RundeckClient.class))
                 .logLevel(Logger.Level.FULL)
                 .target(RundeckClient.class, jobSheet.rundeckServer);
-        rundeckClient.listJobExecutions(jobSheet.jobId).executions.stream()
+        rundeckClient.listJobExecutions(rundeckApiToken, jobSheet.jobId).executions.stream()
                 .filter(execution -> execution.id > jobSheet.lastKnownExecutionId)
                 .sorted()
                 .forEach(execution -> {
@@ -108,9 +110,9 @@ public class RundeckDoctor {
             String s3started = S3_DATE_FORMAT.format(execution.dateStarted.date);
             String s3ended = S3_DATE_FORMAT.format(execution.dateEnded.date);
 
-            String s3bucket = "s3-service-broker-dev-e5772d92-0d95-485d-aa17-151e230a851a";
+            String s3bucket = System.getenv("RDDOC_AWS_S3_BUCKET");
 
-            BasicAWSCredentials awsCreds = new BasicAWSCredentials("AKIAIF2NZIU4SZBBSPHQ", "Ogj1rG/3Ww5kGtUPg9xvtdovtlWDz65HVVlIMKmb");
+            BasicAWSCredentials awsCreds = new BasicAWSCredentials(System.getenv("RDDOC_AWS_ACCESS_KEY"), System.getenv("RDDOC_AWS_SECRET_KEY"));
             AmazonS3 s3client = AmazonS3ClientBuilder.standard()
                     .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
                     .build();

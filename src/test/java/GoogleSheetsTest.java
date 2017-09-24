@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import static org.junit.Assert.assertEquals;
 
 public class GoogleSheetsTest {
-    String spreadsheetId = "1K3kynNKShOGYzBFflKU5B4Sjtfjb9YeT5YVqOdw_qfU";
+    String spreadsheetId = System.getenv("RDDOC_GOOGLE_SPREADSHEET_ID");
 
     private final SheetService sheetService = new SheetService(spreadsheetId);
 
