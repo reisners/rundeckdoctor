@@ -18,6 +18,7 @@ import sheets.SheetService;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.TimeZone;
@@ -89,6 +90,8 @@ public class RundeckDoctor {
                                     case "Delivery":
                                         // find out about the execution's delivery
                                         return getDelivery(execution).map(delivery -> String.format("%s\ndoi_count=%s%1000.1000s", delivery.name, delivery.doi_count, delivery.error_log)).orElse("no delivery found");
+                                    case "Timestamp":
+                                        return SHEET_DATE_FORMAT.format(new Date());
                                     default:
                                         return "";
                                 }
